@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 
-const EditUser = () => {
+const EditUserContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
@@ -26,10 +26,10 @@ const EditUser = () => {
                 } catch (error) {
                     console.error("Error fetching user:", error);
                 } finally {
-                    setIsLoading(false); 
+                    setIsLoading(false);
                 }
             } else {
-                setIsLoading(false); 
+                setIsLoading(false);
             }
         };
 
@@ -109,6 +109,7 @@ const EditUser = () => {
                             className="w-full px-3 py-3 border-2 border-indigo-300 rounded-2xl"
                             required
                         />
+                        
                         {/* button section */}
                         <div className="mt-6">
                             <button type="submit" className="w-full py-3 font-semibold text-white bg-indigo-400 rounded-2xl hover:bg-indigo-500">
@@ -119,6 +120,21 @@ const EditUser = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const EditUser = () => {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center h-screen bg-gray-200">
+            <div className="text-center">
+                <div className="mb-4 text-2xl font-semibold text-indigo-500">Loading...</div>
+                <div className="w-10 h-10 mx-auto border-4 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+            </div>
+            </div>
+        }>
+            <EditUserContent />
+        </Suspense>
     );
 };
 
