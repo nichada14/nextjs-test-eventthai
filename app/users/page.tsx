@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface User {
   id: number;
@@ -50,7 +51,12 @@ const Users = () => {
                             <td className="p-2 border">{user.first_name}</td>
                             <td className="p-2 border">{user.last_name}</td>
                             <td className="flex items-center justify-center p-2 border">
-                                <img className="w-10 h-10 rounded-full" src={user.avatar} alt={user.first_name} />
+                                <Image className="w-10 h-10 rounded-full" 
+                                    src={user.avatar} 
+                                    alt={user.first_name} 
+                                    width={20}
+                                    height={20}  
+                                />
                             </td>
                             <td className="p-2 border">{user.email}</td>
                             <td className="p-2 border">

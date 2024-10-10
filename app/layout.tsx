@@ -31,7 +31,7 @@ export default function RootLayout({
         <meta name="description" content={String(metadata.description) || "Default description"} /> 
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {pathname !== "/login" && pathname !== "/register" && <Navbar />} 
+        {pathname !== "/" && pathname !== "/login" && pathname !== "/register" && <Navbar />} 
         {children}
       </body>
     </html>

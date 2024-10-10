@@ -12,6 +12,7 @@ const EditUser = () => {
     const [email, setEmail] = useState("");
     const [first_name, setFirst_name] = useState("");
     const [last_name, setLast_name] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -24,17 +25,21 @@ const EditUser = () => {
                     setLast_name(userData.last_name);
                 } catch (error) {
                     console.error("Error fetching user:", error);
+                } finally {
+                    setIsLoading(false); 
                 }
+            } else {
+                setIsLoading(false); 
             }
         };
 
         fetchUser();
     }, [id]);
 
-    const handleEdit = async (e: React.FormEvent) => {
+    const handleEdit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://reqres.in/api/users/${id}`, {
+            await axios.put(`https://reqres.in/api/users/${id}`, {
                 email,
                 first_name,
                 last_name,
@@ -50,7 +55,6 @@ const EditUser = () => {
             router.push('/users');
         } catch (error) {
             console.error("Error updating user:", error);
-
             await Swal.fire({
                 title: 'Error!',
                 text: 'There was an error updating the user.',
@@ -60,11 +64,21 @@ const EditUser = () => {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gray-200">
+                <div className="text-center">
+                    <div className="mb-4 text-2xl font-semibold text-indigo-500">Loading user data...</div>
+                    <div className="w-10 h-10 mx-auto border-4 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex items-center justify-center w-full h-screen">
             <div className="w-full max-w-lg lg:max-w-xl">
                 <div className="px-4 pt-4 pb-4 bg-gray-200 border-2 border-indigo-400 rounded-2xl">
-
                     {/* form section */}
                     <form onSubmit={handleEdit} className="p-2">
                         <h2 className="text-2xl font-bold text-center text-indigo-400">Edit User</h2>
@@ -95,7 +109,6 @@ const EditUser = () => {
                             className="w-full px-3 py-3 border-2 border-indigo-300 rounded-2xl"
                             required
                         />
-
                         {/* button section */}
                         <div className="mt-6">
                             <button type="submit" className="w-full py-3 font-semibold text-white bg-indigo-400 rounded-2xl hover:bg-indigo-500">

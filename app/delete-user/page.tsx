@@ -2,20 +2,29 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const DeleteUser = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-    const id = searchParams.get("id");
+  const [id, setId] = useState<string | null>(null);
   const [user, setUser] = useState<{ id: number; email: string } | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("id");
+    setId(userId);
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (id) {
-        const response = await axios.get(`https://reqres.in/api/users/${id}`);
-        setUser(response.data.data);
+        try {
+          const response = await axios.get(`https://reqres.in/api/users/${id}`);
+          setUser(response.data.data);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
       }
     };
 
@@ -48,8 +57,15 @@ const DeleteUser = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
-  }
+    return (
+        <div className="flex items-center justify-center h-screen bg-gray-200">
+            <div className="text-center">
+                <div className="mb-4 text-2xl font-semibold text-indigo-500">Loading...</div>
+                <div className="w-10 h-10 mx-auto border-4 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+            </div>
+        </div>
+    );
+}
 
   return (
     <div className="flex items-center justify-center h-screen">
